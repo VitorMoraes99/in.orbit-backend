@@ -1,3 +1,4 @@
+
 import dayjs from "dayjs"
 import weekOfYear from "dayjs/plugin/weekOfYear"
 import { db } from "../db"
@@ -39,10 +40,11 @@ export async function getWeekPendingGoals() {
             deriredWeeklyFrequency: goalsCreatedUpToWeek.desiredWeeklyFrequency,
             completionCount: sql `
             COALESCE(${goalCompletionCounts.completionCount}, 0)
-            `,
+            `.mapWith(Number),
         })
         .from(goalsCreatedUpToWeek)
-        .leftJoin(goalCompletionCounts, eq(goalCompletionCounts.goalId, goalsCreatedUpToWeek.id));
+        .leftJoin(goalCompletionCounts, eq(goalCompletionCounts.goalId, goalsCreatedUpToWeek.id))
+        .toSQL();
 
-    return pendingGoals;
+    return {pendingGoals};
 }
