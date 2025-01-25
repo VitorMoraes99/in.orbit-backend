@@ -1,29 +1,40 @@
-import {client, db} from '.'
-import { goalCompletions, goals } from './schema'
+import { client, db } from '../db'
+import { goals } from './schema'
+import { fakerPT_BR as faker } from '@faker-js/faker'
+import { goalCompletions } from './schema/goal-completions'
 import dayjs from 'dayjs'
 
-
 async function seed() {
-    await db.delete(goalCompletions)
-    await db.delete(goals)
+  await db.delete(goalCompletions)
+  await db.delete(goals)
 
-    const result = await db.insert(goals).values([
-        {title: 'Acorda cedo', desiredWeeklyFrequency: 5},
-        {title: 'Estudar', desiredWeeklyFrequency: 3},
-        {title: 'Correr', desiredWeeklyFrequency: 2},
-
-    ]).returning()
-
-    const startOfWeek = dayjs().startOf('week')
-
-    await db.insert(goalCompletions).values([
-        {goalId: result[0].id, createdAt: startOfWeek.toDate() },
-        {goalId: result[1].id, createdAt: startOfWeek.add(1, 'day').toDate()},
-        {goalId: result[2].id, createdAt: startOfWeek.add(3, 'day').toDate()},
-
+  const [goal1, goal2] = await db
+    .insert(goals)
+    .values([
+      {
+        title: faker.lorem.words(3),
+        desiredWeeklyFrequency: 1,
+      },
+      {
+        title: faker.lorem.words(3),
+        desiredWeeklyFrequency: 2,
+      },
+      {
+        title: faker.lorem.words(3),
+        desiredWeeklyFrequency: 1,
+      },
     ])
+    .returning()
+
+  const startOfWeek = dayjs().startOf('week')
+
+  await db.insert(goalCompletions).values([
+    { goalId: goal1.id, createdAt: startOfWeek.toDate() },
+    { goalId: goal2.id, createdAt: startOfWeek.add(1, 'day').toDate() },
+  ])
 }
 
-seed().finally(() =>{
-    client.end()
+seed().then(() => {
+  console.log('🌱 Database seeded successfully!')
+  client.end()
 })

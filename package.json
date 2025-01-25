@@ -21,7 +21,8 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "dayjs": "^1.11.13",
     "drizzle-orm": "^0.36.1",
-    "fastify": "^5.1.0",
+    "fastify": "^5.2.1",
+    "fastify-cors": "^6.1.0",
     "fastify-type-provider-zod": "^4.0.2",
     "postgres": "^3.4.5",
     "zod": "^3.23.8"

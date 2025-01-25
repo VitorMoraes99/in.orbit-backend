@@ -21,7 +21,7 @@
           "notNull": true
         },
         "desided_weekly_frequency": {
-          "name": "desided_weekly_frequency",
+          "name": "desired_weekly_frequency",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
